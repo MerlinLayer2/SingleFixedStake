@@ -137,7 +137,7 @@ contract SingleFixedStakeTest is Test {
         
         // 提取奖励
         uint256 beforeBalance = stakeToken.balanceOf(user1);
-        singleFixedStake.withdrawRewards(0);
+        singleFixedStake.withdraw(0);
         uint256 afterBalance = stakeToken.balanceOf(user1);
         
         // 验证提取的金额包含本金和奖励

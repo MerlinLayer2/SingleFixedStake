@@ -35,11 +35,11 @@ forge script script/testnet/CallStake.s.sol:CallStake \
   --broadcast \
   --legacy
 ```
-### 4. withdrawRewards merl
+### 4. withdraw merl
 
 ```bash
 forge script script/testnet/CallStake.s.sol:CallStake \
-  --sig "withdrawRewards()" \
+  --sig "withdraw()" \
   --rpc-url merlin_testnet \
   --broadcast \
   --legacy

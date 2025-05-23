@@ -82,22 +82,22 @@ contract SingleFixedStake is StakeCommon {
         emit Unstake(staker, stakeItem, block.timestamp);
     }
 
-    function withdrawRewards(uint32 _id) external whenNotPaused nonReentrant {
+    function withdraw(uint32 _id) external whenNotPaused nonReentrant {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-        if (stakeItem.withdrawRewards >= stakeItem.totalRewards) revert AlreadyWithdrawn(_id);
+        if (stakeItem.withdrawnRewards >= stakeItem.totalRewards) revert AlreadyWithdrawn(_id);
         uint256 diff = _calCurrentRewards(stakeItem.amount, stakeItem.startTimestamp, stakeItem.endTimestamp)
-            - stakeItem.withdrawRewards;
-        if (diff <= 0 || diff + stakeItem.withdrawRewards > stakeItem.totalRewards) revert InvalidWithdrawDiff(_id);
+            - stakeItem.withdrawnRewards;
+        if (diff <= 0 || diff + stakeItem.withdrawnRewards > stakeItem.totalRewards) revert InvalidWithdrawDiff(_id);
         if (IERC20(stakeToken).balanceOf(rewardsSourceAddress) < diff) revert InsufficientRewardsAmount(_id);
 
-        stakeItem.withdrawRewards += diff;
+        stakeItem.withdrawnRewards += diff;
         stakeItem.withdrawTimestamp = uint32(block.timestamp);
         stakeItem.updateTimestamp = uint32(block.timestamp);
         IERC20(stakeToken).transferFrom(rewardsSourceAddress, staker, diff); //withdraw diff rewards
 
-        emit WithdrawRewards(staker, stakeItem, diff, block.timestamp);
+        emit Withdraw(staker, stakeItem, diff, block.timestamp);
     }
 
     function calTotalRewards(uint32 _id) external view returns (uint256) {

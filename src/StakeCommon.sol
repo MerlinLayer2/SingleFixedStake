@@ -29,7 +29,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         uint32 updateTimestamp;
         uint256 amount;
         uint256 totalRewards;
-        uint256 withdrawRewards;
+        uint256 withdrawnRewards;
     }
 
     mapping(uint256 => StakeItem) public stakes;
@@ -159,5 +159,5 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     event PauseEvent(address adminSetter, bool paused);
     event Stake(address msgSender, StakeItem stakeItem, uint256 stakeTimestamp);
     event Unstake(address msgSender, StakeItem stakeItem, uint256 unstakeTimestamp);
-    event WithdrawRewards(address msgSender, StakeItem stakeItem, uint256 withdrawRewards, uint256 withdrawTimestamp);
+    event Withdraw(address msgSender, StakeItem stakeItem, uint256 withdrawRewards, uint256 withdrawTimestamp);
 }

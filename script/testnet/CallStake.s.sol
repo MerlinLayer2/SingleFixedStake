@@ -60,11 +60,11 @@ contract CallStake is Script {
     }
 
     // 提取质押的代币和奖励
-    function withdrawRewards() public {
+    function withdraw() public {
         vm.startBroadcast(deployerPrivateKey);
 
         // 提取全部质押和奖励
-        singleFixedStake.withdrawRewards(id);
+        singleFixedStake.withdraw(id);
 
         console.log("Withdrawn all stakes and rewards");
         vm.stopBroadcast();
@@ -99,6 +99,6 @@ contract CallStake is Script {
 
         unstake();
 
-        withdrawRewards();
+        withdraw();
     }
 }
