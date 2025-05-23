@@ -372,7 +372,7 @@
                 "internalType": "uint256"
             },
             {
-                "name": "withdrawRewards",
+                "name": "withdrawnRewards",
                 "type": "uint256",
                 "internalType": "uint256"
             }
@@ -482,7 +482,7 @@
     },
     {
         "type": "function",
-        "name": "withdrawRewards",
+        "name": "withdraw",
         "inputs": [
             {
                 "name": "_id",
@@ -631,7 +631,7 @@
                         "internalType": "uint256"
                     },
                     {
-                        "name": "withdrawRewards",
+                        "name": "withdrawnRewards",
                         "type": "uint256",
                         "internalType": "uint256"
                     }
@@ -708,7 +708,7 @@
                         "internalType": "uint256"
                     },
                     {
-                        "name": "withdrawRewards",
+                        "name": "withdrawnRewards",
                         "type": "uint256",
                         "internalType": "uint256"
                     }
@@ -763,7 +763,7 @@
     },
     {
         "type": "event",
-        "name": "WithdrawRewards",
+        "name": "Withdraw",
         "inputs": [
             {
                 "name": "msgSender",
@@ -823,7 +823,7 @@
                         "internalType": "uint256"
                     },
                     {
-                        "name": "withdrawRewards",
+                        "name": "withdrawnRewards",
                         "type": "uint256",
                         "internalType": "uint256"
                     }
