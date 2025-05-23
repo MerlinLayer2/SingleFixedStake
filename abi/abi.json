@@ -583,7 +583,7 @@
                 "name": "stakeItem",
                 "type": "tuple",
                 "indexed": false,
-                "internalType": "struct SingleFixedStake.StakeItem",
+                "internalType": "struct StakeCommon.StakeItem",
                 "components": [
                     {
                         "name": "account",
@@ -660,7 +660,7 @@
                 "name": "stakeItem",
                 "type": "tuple",
                 "indexed": false,
-                "internalType": "struct SingleFixedStake.StakeItem",
+                "internalType": "struct StakeCommon.StakeItem",
                 "components": [
                     {
                         "name": "account",
@@ -775,7 +775,7 @@
                 "name": "stakeItem",
                 "type": "tuple",
                 "indexed": false,
-                "internalType": "struct SingleFixedStake.StakeItem",
+                "internalType": "struct StakeCommon.StakeItem",
                 "components": [
                     {
                         "name": "account",
