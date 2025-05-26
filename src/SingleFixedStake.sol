@@ -72,7 +72,7 @@ contract SingleFixedStake is StakeCommon {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-//        if (stakeItem.endTimestamp > block.timestamp) revert NotDueYet(_id);  //todo tmp test it.
+        if (stakeItem.endTimestamp > block.timestamp) revert NotDueYet(_id);  //todo tmp test it.
         if (stakeItem.unstakeTimestamp > 0) revert AlreadyUnstaked(_id);
 
         totalStakeAmount -= stakeItem.amount;
