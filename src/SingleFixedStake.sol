@@ -47,7 +47,8 @@ contract SingleFixedStake is StakeCommon {
 
         uint32 id = nextStakeId;
         nextStakeId += 1;
-        uint32 endTimestamp = uint32(block.timestamp + ndays * SECONDS_PER_DAY);
+//        uint32 endTimestamp = uint32(block.timestamp + ndays * SECONDS_PER_DAY); //todo recover
+        uint32 endTimestamp = uint32(block.timestamp + 60);
         uint256 totalRewards = _calTotalRewards(_amount);
 
         StakeItem memory stakeItem = StakeItem(
@@ -68,7 +69,7 @@ contract SingleFixedStake is StakeCommon {
         emit Stake(staker, stakeItem, block.timestamp);
     }
 
-    function unstake(uint32 _id) external whenNotPaused nonReentrant {
+    function unstake(uint32 _id) public whenNotPaused nonReentrant {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
@@ -82,7 +83,7 @@ contract SingleFixedStake is StakeCommon {
         emit Unstake(staker, stakeItem, block.timestamp);
     }
 
-    function withdraw(uint32 _id) external whenNotPaused nonReentrant {
+    function withdraw(uint32 _id) public whenNotPaused nonReentrant {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
@@ -98,6 +99,14 @@ contract SingleFixedStake is StakeCommon {
         IERC20(stakeToken).transferFrom(rewardsSourceAddress, staker, diff); //withdraw diff rewards
 
         emit Withdraw(staker, stakeItem, diff, block.timestamp);
+    }
+
+    function unstakeAndWithdraw(uint32 _id) external whenNotPaused nonReentrant {
+        unstake(_id);
+        StakeItem storage stakeItem = stakes[_id];
+        if (stakeItem.withdrawnRewards < stakeItem.totalRewards) {
+            withdraw(_id);
+        }
     }
 
     function calTotalRewards(uint32 _id) external view returns (uint256) {
