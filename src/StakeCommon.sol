@@ -6,7 +6,7 @@ import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/O
 import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
-    uint256 public constant MIN_AMOUNT = 1e14;
+    uint256 public constant MIN_AMOUNT = 1e18;
     uint256 public constant SECONDS_PER_DAY = 86_400;
     uint256 public constant APR_SCALE_FACTOR = 1e6;
     uint256 private _nonReentrantStatus;
