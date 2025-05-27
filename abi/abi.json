@@ -427,6 +427,19 @@
     },
     {
         "type": "function",
+        "name": "unstakeAndWithdraw",
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint32",
+                "internalType": "uint32"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
         "name": "updateStakeCap",
         "inputs": [
             {

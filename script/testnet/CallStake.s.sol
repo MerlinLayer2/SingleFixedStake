@@ -25,7 +25,7 @@ contract CallStake is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // 假设我们要授权质押1个代币（需要根据代币的decimals调整）
-        uint256 amount = 1e20; // 如果代币是18位精度
+        uint256 amount = 1e40; // 如果代币是18位精度
 
         address merlAddress = address(0x5C9AD13BE752a5E21e7Ed393Bb7d407144C6d550); // merl token address
         IERC20(merlAddress).approve(proxyAddress, amount);
@@ -67,6 +67,17 @@ contract CallStake is Script {
         singleFixedStake.withdraw(id);
 
         console.log("Withdrawn all stakes and rewards");
+        vm.stopBroadcast();
+    }
+
+
+    function unstakeAndWithdraw() public {
+        vm.startBroadcast(deployerPrivateKey);
+
+        // 提取全部质押和奖励
+        singleFixedStake.unstakeAndWithdraw(id);
+
+        console.log("unstakeAndWithdraw ...");
         vm.stopBroadcast();
     }
 

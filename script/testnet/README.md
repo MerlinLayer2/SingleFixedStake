@@ -44,7 +44,17 @@ forge script script/testnet/CallStake.s.sol:CallStake \
   --broadcast \
   --legacy
 ```
-### 5. get stake rewards
+
+### 5. unstakeAndWithdraw merl
+
+```bash
+forge script script/testnet/CallStake.s.sol:CallStake \
+  --sig "unstakeAndWithdraw()" \
+  --rpc-url merlin_testnet \
+  --broadcast \
+  --legacy
+```
+### 6. get stake rewards
 
 ```bash
 forge script script/testnet/CallStake.s.sol:CallStake \
