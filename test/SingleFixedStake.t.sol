@@ -164,4 +164,18 @@ contract SingleFixedStakeTest is Test {
         
         vm.stopPrank();
     }
+
+    function test_GetUserTotalStakeAmount() public {
+        uint256 stakeAmount = 100e18;
+        vm.startPrank(user1);
+        stakeToken.approve(address(singleFixedStake), stakeAmount);
+        singleFixedStake.stake(stakeAmount);
+
+        uint256 totalStakeAmount = singleFixedStake.getUserTotalStakeAmount(
+            user1
+        );
+        assertEq(totalStakeAmount, stakeAmount);
+
+        vm.stopPrank();
+    }
 }
