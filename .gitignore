@@ -17,6 +17,7 @@ node_modules/
 .github/
 .idea/
 .env
+.env*
 
 broadcast/
 
