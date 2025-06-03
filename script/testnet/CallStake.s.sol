@@ -70,7 +70,6 @@ contract CallStake is Script {
         vm.stopBroadcast();
     }
 
-
     function unstakeAndWithdraw() public {
         vm.startBroadcast(deployerPrivateKey);
 

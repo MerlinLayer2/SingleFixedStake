@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
+pragma solidity 0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {StakeCommon} from "./StakeCommon.sol";
+import { StakeCommon } from "./StakeCommon.sol";
 
 contract SingleFixedStake is StakeCommon {
     string public constant VERSION = "1.0.0";
@@ -29,15 +29,12 @@ contract SingleFixedStake is StakeCommon {
         uint256 _ndays,
         uint256 _apr,
         uint256 _stakeCap
-    ) public override initializer {
-        super.initialize(
-            _initialOwner,
-            _stakeToken,
-            _rewardsSourceAddress,
-            _ndays,
-            _apr,
-            _stakeCap
-        );
+    )
+        public
+        override
+        initializer
+    {
+        super.initialize(_initialOwner, _stakeToken, _rewardsSourceAddress, _ndays, _apr, _stakeCap);
     }
 
     function stake(uint256 _amount) external whenNotPaused nonReentrant {
@@ -80,7 +77,7 @@ contract SingleFixedStake is StakeCommon {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-        if (stakeItem.endTimestamp > block.timestamp) revert NotDueYet(_id); //todo tmp test it.
+        if (stakeItem.endTimestamp > block.timestamp) revert NotDueYet(_id);
         if (stakeItem.unstakeTimestamp > 0) revert AlreadyUnstaked(_id);
 
         totalStakeAmount -= stakeItem.amount;
@@ -98,19 +95,11 @@ contract SingleFixedStake is StakeCommon {
         StakeItem storage stakeItem = stakes[_id];
         address staker = stakeItem.account;
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-        if (stakeItem.withdrawnRewards >= stakeItem.totalRewards)
-            revert AlreadyWithdrawn(_id);
-        uint256 diff = _calCurrentRewards(
-            stakeItem.amount,
-            stakeItem.startTimestamp,
-            stakeItem.endTimestamp
-        ) - stakeItem.withdrawnRewards;
-        if (
-            diff <= 0 ||
-            diff + stakeItem.withdrawnRewards > stakeItem.totalRewards
-        ) revert InvalidWithdrawDiff(_id);
-        if (IERC20(stakeToken).balanceOf(rewardsSourceAddress) < diff)
-            revert InsufficientRewardsAmount(_id);
+        if (stakeItem.withdrawnRewards >= stakeItem.totalRewards) revert AlreadyWithdrawn(_id);
+        uint256 diff = _calCurrentRewards(stakeItem.amount, stakeItem.startTimestamp, stakeItem.endTimestamp)
+            - stakeItem.withdrawnRewards;
+        if (diff <= 0 || diff + stakeItem.withdrawnRewards > stakeItem.totalRewards) revert InvalidWithdrawDiff(_id);
+        if (IERC20(stakeToken).balanceOf(rewardsSourceAddress) < diff) revert InsufficientRewardsAmount(_id);
 
         stakeItem.withdrawnRewards += diff;
         stakeItem.withdrawTimestamp = uint32(block.timestamp);
@@ -120,9 +109,7 @@ contract SingleFixedStake is StakeCommon {
         emit Withdraw(staker, stakeItem, diff, block.timestamp);
     }
 
-    function unstakeAndWithdraw(
-        uint32 _id
-    ) external whenNotPaused nonReentrant {
+    function unstakeAndWithdraw(uint32 _id) external whenNotPaused nonReentrant {
         _unstake(_id);
         StakeItem storage stakeItem = stakes[_id];
         if (stakeItem.withdrawnRewards < stakeItem.totalRewards) {
@@ -139,17 +126,10 @@ contract SingleFixedStake is StakeCommon {
     function calCurrentRewards(uint32 _id) external view returns (uint256) {
         StakeItem storage stakeItem = stakes[_id];
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-        return
-            _calCurrentRewards(
-                stakeItem.amount,
-                stakeItem.startTimestamp,
-                stakeItem.endTimestamp
-            );
+        return _calCurrentRewards(stakeItem.amount, stakeItem.startTimestamp, stakeItem.endTimestamp);
     }
 
-    function getUserTotalStakeAmount(
-        address _user
-    ) external view returns (uint256) {
+    function getUserTotalStakeAmount(address _user) external view returns (uint256) {
         uint256[] memory stakeIds = _getUserStakeIds(_user);
         uint256 totalStakeAmount = 0;
         for (uint32 i = 0; i < stakeIds.length; i++) {

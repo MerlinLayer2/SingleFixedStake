@@ -2,8 +2,8 @@
 pragma solidity 0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     uint256 public constant MIN_AMOUNT = 1e18;
@@ -48,9 +48,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
      * @dev Authorizes the upgrade of the contract. Only the default admin can upgrade.
      * @param newImplementation The address of the new implementation.
      */
-    function _authorizeUpgrade(
-        address newImplementation
-    ) internal override onlyOwner {
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {
         // Only admin can upgrade the contract
     }
 
@@ -61,11 +59,13 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         uint256 _ndays,
         uint256 _apr,
         uint256 _stakeCap
-    ) public virtual {
+    )
+        public
+        virtual
+    {
         if (_initialOwner == address(0)) revert ZeroAddress("init owner");
         if (_stakeToken == address(0)) revert ZeroAddress("init stakeToken");
-        if (_rewardsSourceAddress == address(0))
-            revert ZeroAddress("init rewardsSourceAddress");
+        if (_rewardsSourceAddress == address(0)) revert ZeroAddress("init rewardsSourceAddress");
         if (_ndays == 0) revert ZeroValue("init ndays");
         if (_apr == 0) revert ZeroValue("init apr");
         if (_stakeCap == 0) revert ZeroValue("init stakeCap");
@@ -97,8 +97,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
      * @dev Pause the activity, only by pauseAdmin.
      */
     function pause() public whenNotPaused {
-        if (msg.sender != pauseAdmin)
-            revert IllegalPausePermissions(msg.sender);
+        if (msg.sender != pauseAdmin) revert IllegalPausePermissions(msg.sender);
         paused = true;
         emit PauseEvent(msg.sender, paused);
     }
@@ -122,9 +121,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         return (amount * apr * ndays) / 365 / APR_SCALE_FACTOR;
     }
 
-    function _getUserStakeIds(
-        address _user
-    ) internal view returns (uint256[] memory) {
+    function _getUserStakeIds(address _user) internal view returns (uint256[] memory) {
         uint256 userStakeCount = userStakeIds[_user].length;
         uint256[] memory stakeIds = new uint256[](userStakeCount);
         for (uint32 i = 0; i < userStakeCount; i++) {
@@ -137,17 +134,17 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         uint256 amount,
         uint32 startTimestamp,
         uint32 endTimestamp
-    ) internal view returns (uint256) {
+    )
+        internal
+        view
+        returns (uint256)
+    {
         uint32 allSeconds = endTimestamp - startTimestamp;
         uint32 stakedSeconds = uint32(block.timestamp - startTimestamp);
         if (stakedSeconds > allSeconds) {
             stakedSeconds = allSeconds;
         }
-        return
-            (amount * apr * ndays * stakedSeconds) /
-            365 /
-            APR_SCALE_FACTOR /
-            allSeconds;
+        return (amount * apr * ndays * stakedSeconds) / 365 / APR_SCALE_FACTOR / allSeconds;
     }
 
     // Error definitions
@@ -166,27 +163,10 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error ReentrancyGuardStatus();
 
     // Event definitions
-    event UpdateStakeCap(
-        address adminSetter,
-        uint256 oldStakeCap,
-        uint256 stakeCap
-    );
-    event PauseAdminChanged(
-        address adminSetter,
-        address oldAddress,
-        address newAddress
-    );
+    event UpdateStakeCap(address adminSetter, uint256 oldStakeCap, uint256 stakeCap);
+    event PauseAdminChanged(address adminSetter, address oldAddress, address newAddress);
     event PauseEvent(address adminSetter, bool paused);
     event Stake(address msgSender, StakeItem stakeItem, uint256 stakeTimestamp);
-    event Unstake(
-        address msgSender,
-        StakeItem stakeItem,
-        uint256 unstakeTimestamp
-    );
-    event Withdraw(
-        address msgSender,
-        StakeItem stakeItem,
-        uint256 withdrawRewards,
-        uint256 withdrawTimestamp
-    );
+    event Unstake(address msgSender, StakeItem stakeItem, uint256 unstakeTimestamp);
+    event Withdraw(address msgSender, StakeItem stakeItem, uint256 withdrawRewards, uint256 withdrawTimestamp);
 }
