@@ -47,8 +47,7 @@ contract SingleFixedStake is StakeCommon {
 
         uint32 id = nextStakeId;
         nextStakeId += 1;
-        //        uint32 endTimestamp = uint32(block.timestamp + ndays * SECONDS_PER_DAY); //todo recover
-        uint32 endTimestamp = uint32(block.timestamp + 600);
+        uint32 endTimestamp = uint32(block.timestamp + ndays * SECONDS_PER_DAY);
         uint256 totalRewards = _calTotalRewards(_amount);
 
         StakeItem memory stakeItem = StakeItem(
