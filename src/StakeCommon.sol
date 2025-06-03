@@ -36,6 +36,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     mapping(address => uint256[]) public userStakeIds;
     uint32 public nextStakeId;
     uint256 public totalStakeAmount;
+    mapping(address => uint256) public userStakeAmount;
 
     modifier nonReentrant() {
         if (_nonReentrantStatus != 0) revert ReentrancyGuardStatus();

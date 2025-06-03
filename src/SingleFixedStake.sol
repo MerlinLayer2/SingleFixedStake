@@ -65,6 +65,7 @@ contract SingleFixedStake is StakeCommon {
         );
         stakes[id] = stakeItem;
         userStakeIds[staker].push(id);
+        userStakeAmount[staker] += _amount;
 
         emit Stake(staker, stakeItem, block.timestamp);
     }
@@ -82,6 +83,7 @@ contract SingleFixedStake is StakeCommon {
 
         totalStakeAmount -= stakeItem.amount;
         stakeItem.unstakeTimestamp = uint32(block.timestamp);
+        userStakeAmount[staker] -= stakeItem.amount;
 
         IERC20(stakeToken).transfer(staker, stakeItem.amount); //withdraw stake token
         emit Unstake(staker, stakeItem, block.timestamp);
@@ -127,6 +129,10 @@ contract SingleFixedStake is StakeCommon {
         StakeItem storage stakeItem = stakes[_id];
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
         return _calCurrentRewards(stakeItem.amount, stakeItem.startTimestamp, stakeItem.endTimestamp);
+    }
+
+    function getUserTotalStakeAmountExt(address _user) external view returns (uint256) {
+        return userStakeAmount[_user];
     }
 
     function getUserTotalStakeAmount(address _user) external view returns (uint256) {
