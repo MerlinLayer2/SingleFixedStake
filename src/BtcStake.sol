@@ -28,6 +28,7 @@ contract BtcStake is StakeCommon {
 
     function stake(uint256 _amount) external payable whenNotPaused nonReentrant {
         if (stakePaused) revert StakePaused();
+        if (block.timestamp > endTimestamp) revert AlreadyExpired();
         if (_amount < MIN_AMOUNT) revert TooSmallStakeAmount();
         if (msg.value != _amount) revert InvalidStakeAmount();
         if (totalStakeAmount + _amount > stakeCap) revert OverStakeCap();

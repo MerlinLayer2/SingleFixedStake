@@ -105,6 +105,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error StakePaused();
     error TooSmallStakeAmount();
     error NotFoundStaking(address staker);
+    error AlreadyExpired();
     error NotDueYet(address staker);
     error AlreadyUnstaked(address staker);
     error UnstakeFailed(address staker);
