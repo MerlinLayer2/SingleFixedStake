@@ -3,26 +3,24 @@ pragma solidity 0.8.28;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
-import {NonProfitStake} from "../src/NonProfitStake.sol";
+import { BtcStake } from "../src/BtcStake.sol";
 import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract DeployProxy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address stakeToken = address (0); //vm.envAddress("STAKE_TOKEN");
         uint256 endTimestamp = vm.envUint("END_TIMESTAMP");
         uint256 stakeCap = vm.envUint("STAKE_CAP");
 
         vm.startBroadcast(deployerPrivateKey);
 
         // 1. deploy implementation contract
-        NonProfitStake implementation = new NonProfitStake();
+        BtcStake implementation = new BtcStake();
 
         // 2. prepare init data
         bytes memory initData = abi.encodeWithSelector(
-            NonProfitStake.initialize.selector,
+            BtcStake.initialize.selector,
             vm.addr(deployerPrivateKey), // admin
-            stakeToken,
             endTimestamp,
             stakeCap
         );

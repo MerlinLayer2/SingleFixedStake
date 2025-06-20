@@ -42,21 +42,11 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         // Only admin can upgrade the contract
     }
 
-    function initialize(
-        address _initialOwner,
-        address _stakeToken,
-        uint32 _endTimestamp,
-        uint256 _stakeCap
-    )
-        public
-        virtual
-    {
+    function initialize(address _initialOwner, uint32 _endTimestamp, uint256 _stakeCap) public virtual {
         if (_initialOwner == address(0)) revert ZeroAddress("init owner");
-        //if (_stakeToken == address(0)) revert ZeroAddress("init stakeToken");
         if (_endTimestamp == 0 || _endTimestamp <= block.timestamp) revert ZeroValue("init endTimestamp");
         if (_stakeCap == 0) revert ZeroValue("init stakeCap");
 
-        stakeToken = _stakeToken;
         endTimestamp = _endTimestamp;
         stakeCap = _stakeCap;
 
@@ -121,7 +111,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error NotFoundStaking(address staker);
     error NotDueYet(address staker);
     error AlreadyUnstaked(address staker);
-    error UnstakeFailed(address stakeToken, address staker);
+    error UnstakeFailed(address staker);
     error IllegalPausePermissions(address sender);
     error AlreadyPaused();
     error ReentrancyGuardStatus();

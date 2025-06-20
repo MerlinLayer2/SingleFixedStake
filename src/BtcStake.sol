@@ -5,8 +5,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { StakeCommon } from "./StakeCommon.sol";
 
-contract NonProfitStake is StakeCommon {
+contract BtcStake is StakeCommon {
     using SafeERC20 for IERC20;
+
     string public constant VERSION = "1.0.0";
 
     constructor() {
@@ -18,36 +19,20 @@ contract NonProfitStake is StakeCommon {
      *
      * - `_initialOwner`：the initial owner is set to the address provided by the deployer. This can
      *      later be changed with {transferOwnership}.
-     * - `_stakeToken`: stake token to get rewards.
      * - `_endTimestamp`: stake end timestamp.
      * - `_stakeCap`: stake cap.
      */
-    function initialize(
-        address _initialOwner,
-        address _stakeToken,
-        uint32 _endTimestamp,
-        uint256 _stakeCap
-    )
-        public
-        override
-        initializer
-    {
-        super.initialize(_initialOwner, _stakeToken, _endTimestamp, _stakeCap);
+    function initialize(address _initialOwner, uint32 _endTimestamp, uint256 _stakeCap) public override initializer {
+        super.initialize(_initialOwner, _endTimestamp, _stakeCap);
     }
 
-    function stake(uint256 _amount) external whenNotPaused nonReentrant payable {
+    function stake(uint256 _amount) external payable whenNotPaused nonReentrant {
         if (stakePaused) revert StakePaused();
         if (_amount < MIN_AMOUNT) revert TooSmallStakeAmount();
+        if (msg.value != _amount) revert InvalidStakeAmount();
         if (totalStakeAmount + _amount > stakeCap) revert OverStakeCap();
 
         address staker = msg.sender;
-        if (stakeToken == address(0)) {
-            if (msg.value != _amount) revert InvalidStakeAmount();
-        } else {
-            IERC20(stakeToken).safeTransferFrom(staker, address(this), _amount);
-        }
-        totalStakeAmount += _amount;
-
         UserStake storage userStake = stakes[staker];
         if (userStake.startTimestamp == 0) {
             stakes[staker] = UserStake(
@@ -62,6 +47,7 @@ contract NonProfitStake is StakeCommon {
             userStake.updateTimestamp = uint32(block.timestamp);
         }
 
+        totalStakeAmount += _amount;
         emit Stake(staker, userStake, _amount, block.timestamp);
     }
 
@@ -75,12 +61,8 @@ contract NonProfitStake is StakeCommon {
         totalStakeAmount -= userStake.amount;
         userStake.unstakeTimestamp = uint32(block.timestamp);
 
-        if (stakeToken == address(0)) {
-            (bool success,) = staker.call{value: userStake.amount}(new bytes(0));
-            if (!success) revert UnstakeFailed(stakeToken, staker);
-        } else {
-            IERC20(stakeToken).safeTransfer(staker, userStake.amount);
-        }
+        (bool success,) = staker.call{ value: userStake.amount }(new bytes(0));
+        if (!success) revert UnstakeFailed(staker);
         emit Unstake(staker, userStake, block.timestamp);
     }
 }
