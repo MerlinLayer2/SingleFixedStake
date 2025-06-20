@@ -20,6 +20,7 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         uint32 unstakeTimestamp;
         uint256 amount;
     }
+
     mapping(address => UserStake) public stakes;
     uint256 public totalStakeAmount;
 
