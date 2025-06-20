@@ -6,19 +6,6 @@
     },
     {
         "type": "function",
-        "name": "APR_SCALE_FACTOR",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
         "name": "MIN_AMOUNT",
         "inputs": [],
         "outputs": [
@@ -71,89 +58,13 @@
     },
     {
         "type": "function",
-        "name": "apr",
+        "name": "endTimestamp",
         "inputs": [],
         "outputs": [
             {
                 "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "calCurrentRewards",
-        "inputs": [
-            {
-                "name": "_id",
                 "type": "uint32",
                 "internalType": "uint32"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "calTotalRewards",
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "getUserTotalStakeAmount",
-        "inputs": [
-            {
-                "name": "_user",
-                "type": "address",
-                "internalType": "address"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "getUserTotalStakeAmountExt",
-        "inputs": [
-            {
-                "name": "_user",
-                "type": "address",
-                "internalType": "address"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
             }
         ],
         "stateMutability": "view"
@@ -173,19 +84,9 @@
                 "internalType": "address"
             },
             {
-                "name": "_rewardsSourceAddress",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "_ndays",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "_apr",
-                "type": "uint256",
-                "internalType": "uint256"
+                "name": "_endTimestamp",
+                "type": "uint32",
+                "internalType": "uint32"
             },
             {
                 "name": "_stakeCap",
@@ -195,32 +96,6 @@
         ],
         "outputs": [],
         "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "ndays",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "nextStakeId",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ],
-        "stateMutability": "view"
     },
     {
         "type": "function",
@@ -290,19 +165,6 @@
     },
     {
         "type": "function",
-        "name": "rewardsSourceAddress",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "address",
-                "internalType": "address"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
         "name": "setPauseAdmin",
         "inputs": [
             {
@@ -325,7 +187,7 @@
             }
         ],
         "outputs": [],
-        "stateMutability": "nonpayable"
+        "stateMutability": "payable"
     },
     {
         "type": "function",
@@ -359,8 +221,8 @@
         "inputs": [
             {
                 "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
+                "type": "address",
+                "internalType": "address"
             }
         ],
         "outputs": [
@@ -368,11 +230,6 @@
                 "name": "account",
                 "type": "address",
                 "internalType": "address"
-            },
-            {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
             },
             {
                 "name": "startTimestamp",
@@ -390,27 +247,12 @@
                 "internalType": "uint32"
             },
             {
-                "name": "withdrawTimestamp",
-                "type": "uint32",
-                "internalType": "uint32"
-            },
-            {
                 "name": "updateTimestamp",
                 "type": "uint32",
                 "internalType": "uint32"
             },
             {
                 "name": "amount",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "totalRewards",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "withdrawnRewards",
                 "type": "uint256",
                 "internalType": "uint256"
             }
@@ -453,26 +295,7 @@
     {
         "type": "function",
         "name": "unstake",
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "unstakeAndWithdraw",
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ],
+        "inputs": [],
         "outputs": [],
         "stateMutability": "nonpayable"
     },
@@ -506,62 +329,6 @@
         ],
         "outputs": [],
         "stateMutability": "payable"
-    },
-    {
-        "type": "function",
-        "name": "userStakeAmount",
-        "inputs": [
-            {
-                "name": "",
-                "type": "address",
-                "internalType": "address"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "userStakeIds",
-        "inputs": [
-            {
-                "name": "",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "withdraw",
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
     },
     {
         "type": "event",
@@ -650,20 +417,15 @@
                 "internalType": "address"
             },
             {
-                "name": "stakeItem",
+                "name": "userStake",
                 "type": "tuple",
                 "indexed": false,
-                "internalType": "struct StakeCommon.StakeItem",
+                "internalType": "struct StakeCommon.UserStake",
                 "components": [
                     {
                         "name": "account",
                         "type": "address",
                         "internalType": "address"
-                    },
-                    {
-                        "name": "id",
-                        "type": "uint32",
-                        "internalType": "uint32"
                     },
                     {
                         "name": "startTimestamp",
@@ -681,11 +443,6 @@
                         "internalType": "uint32"
                     },
                     {
-                        "name": "withdrawTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
                         "name": "updateTimestamp",
                         "type": "uint32",
                         "internalType": "uint32"
@@ -694,18 +451,14 @@
                         "name": "amount",
                         "type": "uint256",
                         "internalType": "uint256"
-                    },
-                    {
-                        "name": "totalRewards",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    },
-                    {
-                        "name": "withdrawnRewards",
-                        "type": "uint256",
-                        "internalType": "uint256"
                     }
                 ]
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
             },
             {
                 "name": "stakeTimestamp",
@@ -727,20 +480,15 @@
                 "internalType": "address"
             },
             {
-                "name": "stakeItem",
+                "name": "userStake",
                 "type": "tuple",
                 "indexed": false,
-                "internalType": "struct StakeCommon.StakeItem",
+                "internalType": "struct StakeCommon.UserStake",
                 "components": [
                     {
                         "name": "account",
                         "type": "address",
                         "internalType": "address"
-                    },
-                    {
-                        "name": "id",
-                        "type": "uint32",
-                        "internalType": "uint32"
                     },
                     {
                         "name": "startTimestamp",
@@ -758,27 +506,12 @@
                         "internalType": "uint32"
                     },
                     {
-                        "name": "withdrawTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
                         "name": "updateTimestamp",
                         "type": "uint32",
                         "internalType": "uint32"
                     },
                     {
                         "name": "amount",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    },
-                    {
-                        "name": "totalRewards",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    },
-                    {
-                        "name": "withdrawnRewards",
                         "type": "uint256",
                         "internalType": "uint256"
                     }
@@ -832,89 +565,6 @@
         "anonymous": false
     },
     {
-        "type": "event",
-        "name": "Withdraw",
-        "inputs": [
-            {
-                "name": "msgSender",
-                "type": "address",
-                "indexed": false,
-                "internalType": "address"
-            },
-            {
-                "name": "stakeItem",
-                "type": "tuple",
-                "indexed": false,
-                "internalType": "struct StakeCommon.StakeItem",
-                "components": [
-                    {
-                        "name": "account",
-                        "type": "address",
-                        "internalType": "address"
-                    },
-                    {
-                        "name": "id",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "startTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "endTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "unstakeTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "withdrawTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "updateTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
-                        "name": "amount",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    },
-                    {
-                        "name": "totalRewards",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    },
-                    {
-                        "name": "withdrawnRewards",
-                        "type": "uint256",
-                        "internalType": "uint256"
-                    }
-                ]
-            },
-            {
-                "name": "withdrawRewards",
-                "type": "uint256",
-                "indexed": false,
-                "internalType": "uint256"
-            },
-            {
-                "name": "withdrawTimestamp",
-                "type": "uint256",
-                "indexed": false,
-                "internalType": "uint256"
-            }
-        ],
-        "anonymous": false
-    },
-    {
         "type": "error",
         "name": "AddressEmptyCode",
         "inputs": [
@@ -935,20 +585,9 @@
         "name": "AlreadyUnstaked",
         "inputs": [
             {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ]
-    },
-    {
-        "type": "error",
-        "name": "AlreadyWithdrawn",
-        "inputs": [
-            {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
+                "name": "staker",
+                "type": "address",
+                "internalType": "address"
             }
         ]
     },
@@ -986,39 +625,22 @@
     },
     {
         "type": "error",
-        "name": "InsufficientRewardsAmount",
-        "inputs": [
-            {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ]
-    },
-    {
-        "type": "error",
         "name": "InvalidInitialization",
         "inputs": []
     },
     {
         "type": "error",
-        "name": "InvalidWithdrawDiff",
-        "inputs": [
-            {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
-            }
-        ]
+        "name": "InvalidStakeAmount",
+        "inputs": []
     },
     {
         "type": "error",
         "name": "NotDueYet",
         "inputs": [
             {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
+                "name": "staker",
+                "type": "address",
+                "internalType": "address"
             }
         ]
     },
@@ -1027,9 +649,9 @@
         "name": "NotFoundStaking",
         "inputs": [
             {
-                "name": "id",
-                "type": "uint32",
-                "internalType": "uint32"
+                "name": "staker",
+                "type": "address",
+                "internalType": "address"
             }
         ]
     },
@@ -1088,6 +710,17 @@
                 "name": "slot",
                 "type": "bytes32",
                 "internalType": "bytes32"
+            }
+        ]
+    },
+    {
+        "type": "error",
+        "name": "UnstakeFailed",
+        "inputs": [
+            {
+                "name": "staker",
+                "type": "address",
+                "internalType": "address"
             }
         ]
     },

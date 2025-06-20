@@ -3,7 +3,7 @@ pragma solidity ^0.8.28;
 
 import { Script } from "lib/forge-std/src/Script.sol";
 import { console } from "forge-std/console.sol";
-import { SingleFixedStake } from "../src/SingleFixedStake.sol";
+import {SimpleStake} from "../src/SimpleStake.sol";
 
 contract DeployScript is Script {
     function run() external {
@@ -11,10 +11,10 @@ contract DeployScript is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        SingleFixedStake razzManager = new SingleFixedStake();
+        SimpleStake imp = new SimpleStake();
 
         vm.stopBroadcast();
 
-        console.log("logic deployed to:", address(razzManager));
+        console.log("logic deployed to:", address(imp));
     }
 }

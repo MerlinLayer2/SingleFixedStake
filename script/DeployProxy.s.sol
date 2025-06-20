@@ -3,31 +3,27 @@ pragma solidity 0.8.28;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
-import { SingleFixedStake } from "../src/SingleFixedStake.sol";
+import {SimpleStake} from "../src/SimpleStake.sol";
 import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract DeployProxy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address stakeToken = vm.envAddress("STAKE_TOKEN");
-        address rewardsSourceAddress = vm.envAddress("REWARDS_SOURCE_ADDRESS");
-        uint256 ndays = vm.envUint("NDAYS");
-        uint256 apr = vm.envUint("APR");
+        address stakeToken = address (0); //vm.envAddress("STAKE_TOKEN");
+        uint256 endTimestamp = vm.envUint("END_TIMESTAMP");
         uint256 stakeCap = vm.envUint("STAKE_CAP");
 
         vm.startBroadcast(deployerPrivateKey);
 
         // 1. deploy implementation contract
-        SingleFixedStake implementation = new SingleFixedStake();
+        SimpleStake implementation = new SimpleStake();
 
         // 2. prepare init data
         bytes memory initData = abi.encodeWithSelector(
-            SingleFixedStake.initialize.selector,
+            SimpleStake.initialize.selector,
             vm.addr(deployerPrivateKey), // admin
             stakeToken,
-            rewardsSourceAddress,
-            ndays,
-            apr,
+            endTimestamp,
             stakeCap
         );
 
