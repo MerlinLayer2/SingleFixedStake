@@ -19,19 +19,6 @@
     },
     {
         "type": "function",
-        "name": "SECONDS_PER_DAY",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
         "name": "UPGRADE_INTERFACE_VERSION",
         "inputs": [],
         "outputs": [
@@ -75,11 +62,6 @@
         "inputs": [
             {
                 "name": "_initialOwner",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "_stakeToken",
                 "type": "address",
                 "internalType": "address"
             },
@@ -204,6 +186,19 @@
     },
     {
         "type": "function",
+        "name": "stakePaused",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool",
+                "internalType": "bool"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
         "name": "stakeToken",
         "inputs": [],
         "outputs": [
@@ -233,11 +228,6 @@
             },
             {
                 "name": "startTimestamp",
-                "type": "uint32",
-                "internalType": "uint32"
-            },
-            {
-                "name": "endTimestamp",
                 "type": "uint32",
                 "internalType": "uint32"
             },
@@ -301,12 +291,38 @@
     },
     {
         "type": "function",
+        "name": "updateEndTimestamp",
+        "inputs": [
+            {
+                "name": "_endTimestamp",
+                "type": "uint32",
+                "internalType": "uint32"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
         "name": "updateStakeCap",
         "inputs": [
             {
                 "name": "_stakeCap",
                 "type": "uint256",
                 "internalType": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "updateStakePaused",
+        "inputs": [
+            {
+                "name": "_stakePaused",
+                "type": "bool",
+                "internalType": "bool"
             }
         ],
         "outputs": [],
@@ -433,11 +449,6 @@
                         "internalType": "uint32"
                     },
                     {
-                        "name": "endTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
                         "name": "unstakeTimestamp",
                         "type": "uint32",
                         "internalType": "uint32"
@@ -496,11 +507,6 @@
                         "internalType": "uint32"
                     },
                     {
-                        "name": "endTimestamp",
-                        "type": "uint32",
-                        "internalType": "uint32"
-                    },
-                    {
                         "name": "unstakeTimestamp",
                         "type": "uint32",
                         "internalType": "uint32"
@@ -519,6 +525,31 @@
             },
             {
                 "name": "unstakeTimestamp",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UpdateEndTimestamp",
+        "inputs": [
+            {
+                "name": "adminSetter",
+                "type": "address",
+                "indexed": false,
+                "internalType": "address"
+            },
+            {
+                "name": "oldEndTimestamp",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "endTimestamp",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -547,6 +578,25 @@
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UpdateStakePaused",
+        "inputs": [
+            {
+                "name": "adminSetter",
+                "type": "address",
+                "indexed": false,
+                "internalType": "address"
+            },
+            {
+                "name": "stakePaused",
+                "type": "bool",
+                "indexed": false,
+                "internalType": "bool"
             }
         ],
         "anonymous": false
@@ -690,6 +740,11 @@
     {
         "type": "error",
         "name": "ReentrancyGuardStatus",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "StakePaused",
         "inputs": []
     },
     {
