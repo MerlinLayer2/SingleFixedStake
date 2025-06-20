@@ -3,7 +3,7 @@ pragma solidity ^0.8.28;
 
 import { Script } from "lib/forge-std/src/Script.sol";
 import { console } from "forge-std/console.sol";
-import {SimpleStake} from "../src/SimpleStake.sol";
+import {NonProfitStake} from "../src/NonProfitStake.sol";
 
 contract DeployScript is Script {
     function run() external {
@@ -11,7 +11,7 @@ contract DeployScript is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        SimpleStake imp = new SimpleStake();
+        NonProfitStake imp = new NonProfitStake();
 
         vm.stopBroadcast();
 

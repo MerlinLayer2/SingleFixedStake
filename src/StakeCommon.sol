@@ -7,7 +7,6 @@ import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils
 
 contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     uint256 public constant MIN_AMOUNT = 1e15;
-    uint256 public constant SECONDS_PER_DAY = 86_400;
     uint256 private _nonReentrantStatus;
     address public pauseAdmin;
     bool public paused;
@@ -15,11 +14,11 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     address public stakeToken;
     uint32 public endTimestamp;
     uint256 public stakeCap = 50e18;
+    bool public stakePaused = false;
 
     struct UserStake {
         address account;
         uint32 startTimestamp;
-        uint32 endTimestamp;
         uint32 unstakeTimestamp;
         uint32 updateTimestamp;
         uint256 amount;
@@ -97,9 +96,19 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
 
     function updateStakeCap(uint256 _stakeCap) external onlyOwner {
         if (_stakeCap == 0) revert ZeroValue("update stakeCap");
-        uint256 oldStakeCap = stakeCap;
+        emit UpdateStakeCap(msg.sender, stakeCap, _stakeCap);
         stakeCap = _stakeCap;
-        emit UpdateStakeCap(msg.sender, oldStakeCap, stakeCap);
+    }
+
+    function updateEndTimestamp(uint32 _endTimestamp) external onlyOwner {
+        if (_endTimestamp <= 0) revert ZeroValue("update endTimestamp");
+        emit UpdateEndTimestamp(msg.sender, endTimestamp, _endTimestamp);
+        endTimestamp = _endTimestamp;
+    }
+
+    function updateStakePaused(bool _stakePaused) external onlyOwner {
+        stakePaused = _stakePaused;
+        emit UpdateStakePaused(msg.sender, _stakePaused);
     }
 
     // Error definitions
@@ -107,17 +116,20 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error ZeroValue(string msg);
     error OverStakeCap();
     error InvalidStakeAmount();
+    error StakePaused();
     error TooSmallStakeAmount();
     error NotFoundStaking(address staker);
     error NotDueYet(address staker);
     error AlreadyUnstaked(address staker);
-    error UnstakeFailed(address staker);
+    error UnstakeFailed(address stakeToken, address staker);
     error IllegalPausePermissions(address sender);
     error AlreadyPaused();
     error ReentrancyGuardStatus();
 
     // Event definitions
     event UpdateStakeCap(address adminSetter, uint256 oldStakeCap, uint256 stakeCap);
+    event UpdateEndTimestamp(address adminSetter, uint256 oldEndTimestamp, uint256 endTimestamp);
+    event UpdateStakePaused(address adminSetter, bool stakePaused);
     event PauseAdminChanged(address adminSetter, address oldAddress, address newAddress);
     event PauseEvent(address adminSetter, bool paused);
     event Stake(address msgSender, UserStake userStake, uint256 amount, uint256 stakeTimestamp);

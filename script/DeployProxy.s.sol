@@ -3,7 +3,7 @@ pragma solidity 0.8.28;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
-import {SimpleStake} from "../src/SimpleStake.sol";
+import {NonProfitStake} from "../src/NonProfitStake.sol";
 import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract DeployProxy is Script {
@@ -16,11 +16,11 @@ contract DeployProxy is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // 1. deploy implementation contract
-        SimpleStake implementation = new SimpleStake();
+        NonProfitStake implementation = new NonProfitStake();
 
         // 2. prepare init data
         bytes memory initData = abi.encodeWithSelector(
-            SimpleStake.initialize.selector,
+            NonProfitStake.initialize.selector,
             vm.addr(deployerPrivateKey), // admin
             stakeToken,
             endTimestamp,
