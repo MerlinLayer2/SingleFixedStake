@@ -11,19 +11,15 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     address public pauseAdmin;
     bool public paused;
 
-    address public stakeToken;
     uint32 public endTimestamp;
     uint256 public stakeCap = 50e18;
     bool public stakePaused = false;
 
     struct UserStake {
         address account;
-        uint32 startTimestamp;
         uint32 unstakeTimestamp;
-        uint32 updateTimestamp;
         uint256 amount;
     }
-
     mapping(address => UserStake) public stakes;
     uint256 public totalStakeAmount;
 
@@ -122,6 +118,6 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     event UpdateStakePaused(address adminSetter, bool stakePaused);
     event PauseAdminChanged(address adminSetter, address oldAddress, address newAddress);
     event PauseEvent(address adminSetter, bool paused);
-    event Stake(address msgSender, UserStake userStake, uint256 amount, uint256 stakeTimestamp);
-    event Unstake(address msgSender, UserStake userStake, uint256 unstakeTimestamp);
+    event Stake(address msgSender, uint256 amount, uint256 stakeTimestamp);
+    event Unstake(address msgSender, uint256 amount, uint256 unstakeTimestamp);
 }

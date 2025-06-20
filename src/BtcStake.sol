@@ -34,27 +34,24 @@ contract BtcStake is StakeCommon {
 
         address staker = msg.sender;
         UserStake storage userStake = stakes[staker];
-        if (userStake.startTimestamp == 0) {
+        if (userStake.amount == 0) {
             stakes[staker] = UserStake(
                 staker, //account
-                uint32(block.timestamp), //startTimestamp
                 0, //unstakeTimestamp
-                uint32(block.timestamp), //updateTimestamp
                 _amount //amount
             );
         } else {
             userStake.amount += _amount;
-            userStake.updateTimestamp = uint32(block.timestamp);
         }
 
         totalStakeAmount += _amount;
-        emit Stake(staker, userStake, _amount, block.timestamp);
+        emit Stake(staker, _amount, block.timestamp);
     }
 
     function unstake() external whenNotPaused nonReentrant {
         address staker = msg.sender;
         UserStake storage userStake = stakes[staker];
-        if (userStake.startTimestamp == 0) revert NotFoundStaking(staker);
+        if (userStake.amount == 0) revert NotFoundStaking(staker);
         if (endTimestamp > block.timestamp) revert NotDueYet(staker);
         if (userStake.unstakeTimestamp > 0) revert AlreadyUnstaked(staker);
 
@@ -63,6 +60,6 @@ contract BtcStake is StakeCommon {
 
         (bool success,) = staker.call{ value: userStake.amount }(new bytes(0));
         if (!success) revert UnstakeFailed(staker);
-        emit Unstake(staker, userStake, block.timestamp);
+        emit Unstake(staker, userStake.amount, block.timestamp);
     }
 }
