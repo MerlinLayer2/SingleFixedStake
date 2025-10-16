@@ -26,6 +26,7 @@ PRIVATE_KEY = "${PRIVATE_KEY}"
 
 [etherscan]
   # mainnet = { key = "${API_KEY_ETHERSCAN}" }
+  merlin_mainnet = { key = "${API_KEY_ETHERSCAN}", url = "${API_URL_ETHERSCAN}", chain = 4200 }
 
 [fmt]
   bracket_spacing = true
@@ -50,5 +51,6 @@ PRIVATE_KEY = "${PRIVATE_KEY}"
   sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
   # merlin_testnet = "https://testnet-rpc.merlinchain.io"
   merlin_testnet = "https://merlin-testnet-erigon.merlinchain.io/"
-  merlin_mainnet = "https://internal-rpc.merlinchain.io"
+  # merlin_mainnet = "https://internal-rpc.merlinchain.io"
+  merlin_mainnet = "https://merlin.blockpi.network/v1/rpc/3ddc9bccb0f43c15f7f418e3c30506fcb8896d3b"
   bsc_testnet = "https://data-seed-prebsc-1-s1.binance.org:8545/"

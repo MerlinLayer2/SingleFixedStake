@@ -11,6 +11,11 @@ forge script script/DeployProxy.s.sol:DeployProxy \
     --rpc-url merlin_testnet \
     --broadcast \
     --legacy # --verify
+    
+    forge script script/DeployProxy.s.sol:DeployProxy \
+    --rpc-url merlin_mainnet \
+    --broadcast \
+    --legacy --verify
 ```
 #### Environment Variables Setup (in .env)
 - export PRIVATE_KEY=your_private_key
@@ -39,7 +44,12 @@ forge script script/Upgrade.s.sol:Upgrade \
 forge script script/DeployLogic.sol:DeployScript \
     --rpc-url=merlin_testnet \
     --broadcast \
-    --legacy
+    --legacy # --verify
+    
+    forge script script/DeployLogic.sol:DeployScript \
+    --rpc-url=merlin_mainnet \
+    --broadcast \
+    --legacy --verify
 ```
 
 ## Usage Instructions
