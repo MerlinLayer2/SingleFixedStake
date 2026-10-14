@@ -35,6 +35,8 @@ contract SingleFixedStakeTest is Test {
         // 部署代理合约
         ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
         singleFixedStake = SingleFixedStake(address(proxy));
+        vm.prank(admin);
+        singleFixedStake.initializeV2(90, 150_000);
 
         // 给测试用户铸造代币
         stakeToken.mint(user1, 1000e18);
@@ -100,7 +102,10 @@ contract SingleFixedStakeTest is Test {
         // 等待到期时间
         skip(NDAYS * 1 days); // 修改：等待完整的锁定期
 
-        // 解除质押
+        // 首次操作开启延期，尚不转出本金
+        singleFixedStake.unstake(0);
+        assertEq(stakeToken.balanceOf(user1), 900e18);
+        skip(90 days);
         singleFixedStake.unstake(0);
 
         // 验证质押状态
@@ -117,17 +122,19 @@ contract SingleFixedStakeTest is Test {
         stakeToken.approve(address(singleFixedStake), stakeAmount);
         singleFixedStake.stake(stakeAmount);
 
-        // 等待到期时间并解除质押
+        // 到期后首次操作开启延期
         skip(NDAYS * 1 days); // 修改：等待完整的锁定期
-        singleFixedStake.unstake(0);
+        singleFixedStake.withdraw(0);
+        skip(90 days);
 
         // 提取奖励
         uint256 beforeBalance = stakeToken.balanceOf(user1);
         singleFixedStake.withdraw(0);
         uint256 afterBalance = stakeToken.balanceOf(user1);
 
-        // 验证提取的金额包含本金和奖励
-        assertTrue(afterBalance - beforeBalance > 0);
+        uint256 expectedRewards = (stakeAmount * APR * NDAYS) / 365 / 1e6;
+        uint256 delayReward = (expectedRewards * 150_000 * 90) / 365 / 1e6;
+        assertEq(afterBalance - beforeBalance, expectedRewards + delayReward);
 
         vm.stopPrank();
     }

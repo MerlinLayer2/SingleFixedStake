@@ -14,6 +14,8 @@ contract DeployProxy is Script {
         uint256 ndays = vm.envUint("NDAYS");
         uint256 apr = vm.envUint("APR");
         uint256 stakeCap = vm.envUint("STAKE_CAP");
+        uint256 delayDays = vm.envUint("DELAY_DAYS");
+        uint256 delayApr = vm.envUint("DELAY_APR");
 
         vm.startBroadcast(deployerPrivateKey);
 
@@ -33,6 +35,7 @@ contract DeployProxy is Script {
 
         // 3. deploy proxy contract with the implementation address and init data
         ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        SingleFixedStake(address(proxy)).initializeV2(delayDays, delayApr);
 
         vm.stopBroadcast();
 

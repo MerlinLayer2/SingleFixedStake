@@ -11,10 +11,10 @@ contract DeployScript is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        SingleFixedStake razzManager = new SingleFixedStake();
+        SingleFixedStake implementation = new SingleFixedStake();
 
         vm.stopBroadcast();
 
-        console.log("logic deployed to:", address(razzManager));
+        console.log("Implementation deployed to:", address(implementation));
     }
 }

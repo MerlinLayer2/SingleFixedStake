@@ -2,6 +2,7 @@
 pragma solidity 0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
@@ -37,6 +38,26 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     uint32 public nextStakeId;
     uint256 public totalStakeAmount;
     mapping(address => uint256) public userStakeAmount;
+
+    // V2 storage is appended so existing proxy storage and stake records keep their layout.
+    uint256 public delayDays;
+    uint256 public delayApr;
+
+    struct DelayItem {
+        uint256 startTimestamp;
+        uint256 endTimestamp;
+        uint256 delayReward;
+        uint256 updateTimestamp;
+        bool delayRewardWithdrawn;
+    }
+
+    mapping(uint256 => DelayItem) public principalDelays;
+    mapping(uint256 => DelayItem) public rewardDelays;
+
+    enum DelayKind {
+        Principal,
+        Rewards
+    }
 
     modifier nonReentrant() {
         if (_nonReentrantStatus != 0) revert ReentrancyGuardStatus();
@@ -118,8 +139,51 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
         emit UpdateStakeCap(msg.sender, oldStakeCap, stakeCap);
     }
 
+    function initializeV2(uint256 _delayDays, uint256 _delayApr) external onlyOwner reinitializer(2) {
+        if (_delayDays == 0) revert ZeroValue("init delayDays");
+        delayDays = _delayDays;
+        delayApr = _delayApr;
+        emit DelayDaysUpdated(0, _delayDays);
+        emit DelayAprUpdated(0, _delayApr);
+    }
+
+    function updateApr(uint256 _apr) external onlyOwner {
+        if (_apr == 0) revert ZeroValue("update apr");
+        uint256 oldApr = apr;
+        apr = _apr;
+        emit AprUpdated(oldApr, _apr);
+    }
+
+    function updateDelayDays(uint256 _delayDays) external onlyOwner {
+        if (_delayDays == 0) revert ZeroValue("update delayDays");
+        uint256 oldDelayDays = delayDays;
+        delayDays = _delayDays;
+        emit DelayDaysUpdated(oldDelayDays, _delayDays);
+    }
+
+    function updateDelayApr(uint256 _delayApr) external onlyOwner {
+        uint256 oldDelayApr = delayApr;
+        delayApr = _delayApr;
+        emit DelayAprUpdated(oldDelayApr, _delayApr);
+    }
+
     function _calTotalRewards(uint256 amount) internal view returns (uint256) {
         return (amount * apr * ndays) / 365 / APR_SCALE_FACTOR;
+    }
+
+    function _calCurrentRewards(
+        uint256 totalRewards,
+        uint32 startTimestamp,
+        uint32 endTimestamp
+    )
+        internal
+        view
+        returns (uint256)
+    {
+        uint256 totalSeconds = endTimestamp - startTimestamp;
+        uint256 elapsed = block.timestamp - startTimestamp;
+        if (elapsed > totalSeconds) elapsed = totalSeconds;
+        return Math.mulDiv(totalRewards, elapsed, totalSeconds);
     }
 
     function _getUserStakeIds(address _user) internal view returns (uint256[] memory) {
@@ -129,23 +193,6 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
             stakeIds[i] = userStakeIds[_user][i];
         }
         return stakeIds;
-    }
-
-    function _calCurrentRewards(
-        uint256 amount,
-        uint32 startTimestamp,
-        uint32 endTimestamp
-    )
-        internal
-        view
-        returns (uint256)
-    {
-        uint32 allSeconds = endTimestamp - startTimestamp;
-        uint32 stakedSeconds = uint32(block.timestamp - startTimestamp);
-        if (stakedSeconds > allSeconds) {
-            stakedSeconds = allSeconds;
-        }
-        return (amount * apr * ndays * stakedSeconds) / 365 / APR_SCALE_FACTOR / allSeconds;
     }
 
     // Error definitions
@@ -162,6 +209,10 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error IllegalPausePermissions(address sender);
     error AlreadyPaused();
     error ReentrancyGuardStatus();
+    error NotStakeOwner(uint32 id);
+    error DelayNotConfigured();
+    error DelayNotDueYet(uint32 id);
+    error NothingToClaim(uint32 id);
 
     // Event definitions
     event UpdateStakeCap(address adminSetter, uint256 oldStakeCap, uint256 stakeCap);
@@ -170,4 +221,16 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     event Stake(address msgSender, StakeItem stakeItem, uint256 stakeTimestamp);
     event Unstake(address msgSender, StakeItem stakeItem, uint256 unstakeTimestamp);
     event Withdraw(address msgSender, StakeItem stakeItem, uint256 withdrawRewards, uint256 withdrawTimestamp);
+    event AprUpdated(uint256 oldApr, uint256 newApr);
+    event DelayDaysUpdated(uint256 oldDelayDays, uint256 newDelayDays);
+    event DelayAprUpdated(uint256 oldDelayApr, uint256 newDelayApr);
+    event DelayStarted(
+        uint32 indexed id,
+        address indexed account,
+        DelayKind indexed kind,
+        uint256 startTimestamp,
+        uint256 endTimestamp,
+        uint256 delayReward
+    );
+    event DelayRewardWithdrawn(uint32 indexed id, address indexed account, DelayKind indexed kind, uint256 delayReward);
 }
