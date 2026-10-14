@@ -167,7 +167,6 @@ contract SingleFixedStake is StakeCommon {
     {
         StakeItem storage stakeItem = stakes[_id];
         if (stakeItem.startTimestamp == 0) revert NotFoundStaking(_id);
-        if (msg.sender != stakeItem.account) revert NotStakeOwner(_id);
         if (stakeItem.endTimestamp > block.timestamp) revert NotDueYet(_id);
 
         if (delayItem.endTimestamp == 0) {

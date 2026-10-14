@@ -277,12 +277,25 @@ contract SingleFixedStakeV2Test is Test {
         assertEq(token.balanceOf(USER) - beforeBalance, AMOUNT + _principalDelayReward());
     }
 
-    function test_OnlyStakerCanStartDelay() public {
+    function test_ThirdPartyCanStartAndClaimBothDelaysForStaker() public {
         uint32 id = _stake();
+        address thirdParty = address(0xBAD);
         skip(STAKE_DAYS * 1 days);
-        vm.prank(address(0xBAD));
-        vm.expectRevert(abi.encodeWithSelector(StakeCommon.NotStakeOwner.selector, id));
-        stakeContract.unstake(id);
+        vm.prank(thirdParty);
+        stakeContract.unstakeAndWithdraw(id);
+
+        (uint256 principalStart,,,,) = stakeContract.principalDelays(id);
+        (uint256 rewardStart,,,,) = stakeContract.rewardDelays(id);
+        assertEq(principalStart, block.timestamp);
+        assertEq(rewardStart, block.timestamp);
+        assertEq(token.balanceOf(USER), 900e18);
+        assertEq(token.balanceOf(thirdParty), 0);
+
+        skip(DELAY_DAYS * 1 days);
+        vm.prank(thirdParty);
+        stakeContract.unstakeAndWithdraw(id);
+        assertEq(token.balanceOf(USER), 1000e18 + _reward(OLD_APR) + _principalDelayReward() + _rewardDelayReward());
+        assertEq(token.balanceOf(thirdParty), 0);
     }
 
     function test_NewDelayConfigAppliesOnlyToLaterRequests() public {

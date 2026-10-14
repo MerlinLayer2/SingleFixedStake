@@ -1348,17 +1348,6 @@
   },
   {
     "type": "error",
-    "name": "NotStakeOwner",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint32",
-        "internalType": "uint32"
-      }
-    ]
-  },
-  {
-    "type": "error",
     "name": "NothingToClaim",
     "inputs": [
       {

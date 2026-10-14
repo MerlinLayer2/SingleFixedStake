@@ -209,7 +209,6 @@ contract StakeCommon is OwnableUpgradeable, UUPSUpgradeable {
     error IllegalPausePermissions(address sender);
     error AlreadyPaused();
     error ReentrancyGuardStatus();
-    error NotStakeOwner(uint32 id);
     error DelayNotConfigured();
     error DelayNotDueYet(uint32 id);
     error NothingToClaim(uint32 id);
